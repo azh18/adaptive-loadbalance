@@ -11,20 +11,25 @@ import org.apache.dubbo.rpc.RpcException;
 /**
  * @author daofeng.xjf
  *
- * 客户端过滤器
- * 可选接口
- * 用户可以在客户端拦截请求和响应,捕获 rpc 调用时产生、服务端返回的已知异常。
+ * wrk -t4 -c1024 -d60s -T5 --script=./wrk.lua --latency http://localhost:8087/invoke mvn clean
+ * install -Dmaven.test.skip=true 客户端过滤器 可选接口 用户可以在客户端拦截请求和响应,捕获 rpc 调用时产生、服务端返回的已知异常。
  */
 @Activate(group = Constants.CONSUMER)
 public class TestClientFilter implements Filter {
-    @Override
-    public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        try{
-            Result result = invoker.invoke(invocation);
-            return result;
-        }catch (Exception e){
-            throw e;
-        }
 
+  private static Context context = Context.getInstance();
+
+  @Override
+  public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+    try {
+//      if()
+
+      Result result = invoker.invoke(invocation);
+
+      return result;
+    } catch (Exception e) {
+      throw e;
     }
+
+  }
 }
