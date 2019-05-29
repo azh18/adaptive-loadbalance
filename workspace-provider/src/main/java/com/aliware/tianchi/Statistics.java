@@ -101,10 +101,12 @@ public class Statistics {
 
   private volatile ProviderStateEnum stateEnum = ProviderStateEnum.NORMAL;
 
-  public void setState(double curr, double avg) {
+  public ProviderStateEnum setState(double curr, double avg) {
     ProviderStateEnum tmp = state(curr, avg);
+    boolean tooHot = tooHot();
     synchronized (lock_state) {
-      this.stateEnum = tmp;
+      this.stateEnum = tooHot ? ProviderStateEnum.$1BUSY : tmp;
+      return stateEnum;
     }
   }
 
@@ -138,6 +140,12 @@ public class Statistics {
     }
 
     if (c < avg) {
+      if ((avg - c) / c > 0.2) {
+        return ProviderStateEnum.$$$IDLE;
+      }
+      if ((avg - c) / c > 0.15) {
+        return ProviderStateEnum.$$IDLE;
+      }
       if ((avg - c) / c > 0.1) {
         return ProviderStateEnum.$IDLE;
       }
@@ -149,34 +157,6 @@ public class Statistics {
     return ProviderStateEnum.NORMAL;
   }
 
-  enum ProviderStateEnum {
-    $IDLE(3),
-    IDLE(1),
-    NORMAL(0),
-    BUSY(-1),
-    $1BUSY(-2),
-    $2BUSY(-3),
-    $3BUSY(-4),
-    $4BUSY(-5),
-    $5BUSY(-6),
-    $6BUSY(-7),
-    ;
-
-    private double value;
-
-    ProviderStateEnum(double value) {
-      this.value = value;
-    }
-
-    public double getValue() {
-      return value;
-    }
-
-    public boolean isBusy() {
-      return value < 0;
-    }
-  }
-
 
   private volatile int max = Integer.MAX_VALUE;
 
@@ -184,6 +164,7 @@ public class Statistics {
 
   private final Object lock_t = new Object();
 
+  // 100m一次
   public void setMax(int max, int active) {
     synchronized (lock_t) {
       this.max = max;
@@ -193,7 +174,7 @@ public class Statistics {
 
   public boolean tooHot() {
     synchronized (lock_t) {
-      return (max - active) < 4;
+      return (max - active) * 1.0 / max < 0.05;
     }
   }
 }

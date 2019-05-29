@@ -1,15 +1,12 @@
 package com.aliware.tianchi;
 
-import org.apache.dubbo.common.status.Status;
-import org.apache.dubbo.rpc.listener.CallbackListener;
-import org.apache.dubbo.rpc.protocol.dubbo.status.ThreadPoolStatusChecker;
-import org.apache.dubbo.rpc.service.CallbackService;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.dubbo.rpc.listener.CallbackListener;
+import org.apache.dubbo.rpc.service.CallbackService;
 
 /**
  * @author daofeng.xjf
@@ -29,23 +26,14 @@ public class CallbackServiceImpl implements CallbackService {
           long cost = statistics.getCost();
           long totalFinished = statistics.getTotalFinished();
           long totalCost = statistics.getTotalCost();
+          ProviderStateEnum stateEnum = statistics.setState(cost * 1.0 / finished, totalCost * 1.0 / totalFinished);
 
           for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
             try {
-              statistics.setState(cost * 1.0 / finished, totalCost * 1.0 / totalFinished);
-
               entry.getValue().receiveServerMsg(
                   statistics.getName()
                       + " "
-                      + String.valueOf(statistics.getRequest())
-                      + " "
-                      + String.valueOf(finished)
-                      + " "
-                      + String.valueOf(cost)
-                      + " "
-                      + String.format("%.2f", cost * 1.0 / finished)
-                      + " "
-                      + String.format("%.2f", totalCost * 1.0 / totalFinished)
+                      + stateEnum.getId()
               );
             } catch (Throwable t1) {
               listeners.remove(entry.getKey());

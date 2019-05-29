@@ -11,11 +11,11 @@ public class Context {
     return instance;
   }
 
-  private volatile int small = 100;
+  private volatile int small = 200;
 
   private volatile int mid = 200;
 
-  private volatile int large = 300;
+  private volatile int large = 200;
 
   private final Object lock = new Object();
 
@@ -43,26 +43,27 @@ public class Context {
     }
   }
 
+
   public void adjust(ProviderStateEnum s, Provider provider) {
     synchronized (lock) {
       switch (provider) {
         case S: {
           if(small > 20 || !s.isBusy()) {
-            small += s.value;
+            small += s.getValue();
           }
           this.s = s;
           break;
         }
         case M: {
           if(mid > 20 || !s.isBusy()) {
-            mid += s.value;
+            mid += s.getValue();
           }
           this.m = s;
           break;
         }
         case L: {
           if(large > 20 || !s.isBusy()) {
-            large += s.value;
+            large += s.getValue();
           }
           this.l = s;
           break;
@@ -95,35 +96,6 @@ public class Context {
 //    }
   }
 
-  enum ProviderStateEnum {
-    $$$IDLE(7),
-    $$IDLE(5),
-    $IDLE(3),
-    IDLE(1),
-    NORMAL(0),
-    BUSY(-1),
-    $1BUSY(-2),
-    $2BUSY(-3),
-    $3BUSY(-4),
-    $4BUSY(-5),
-    $5BUSY(-6),
-    $6BUSY(-7),
-    ;
-
-    private double value;
-
-    ProviderStateEnum(double value) {
-      this.value = value;
-    }
-
-    public double getValue() {
-      return value;
-    }
-
-    public boolean isBusy() {
-      return value < 0;
-    }
-  }
 
   enum Provider {
     S,
