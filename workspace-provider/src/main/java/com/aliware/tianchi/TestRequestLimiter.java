@@ -11,9 +11,9 @@ import org.apache.dubbo.remoting.transport.RequestLimiter;
 public class TestRequestLimiter implements RequestLimiter {
 
 
-  private Statistics statistics = Statistics.getInstance();
+//  private Statistics statistics = Statistics.getInstance();
 
-  private ThreadPoolMonitor monitor = new ThreadPoolMonitor();
+//  private ThreadPoolMonitor monitor = new ThreadPoolMonitor();
 
   /**
    * @param request 服务请求
@@ -23,14 +23,14 @@ public class TestRequestLimiter implements RequestLimiter {
   @Override
   public boolean tryAcquire(Request request, int activeTaskCount) {
 
-    monitor.check();
+//    monitor.check();
 
-    boolean tooHot = statistics.tooHot();
+//    boolean tooHot = statistics.tooHot();
 
-    if (tooHot) {
+//    if (tooHot) {
 //      System.out.println("###### reject ##### " + " " + tooHot);
-      return false;
-    }
+//      return false;
+//    }
 
     return true;
   }
