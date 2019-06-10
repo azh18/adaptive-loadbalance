@@ -48,21 +48,21 @@ public class Context {
     synchronized (lock) {
       switch (provider) {
         case S: {
-          if(small > 20 || !s.isBusy()) {
+          if((small > 20 && s.isBusy()) || (small < 500 && !s.isBusy())) {
             small += s.getValue();
           }
           this.s = s;
           break;
         }
         case M: {
-          if(mid > 20 || !s.isBusy()) {
+          if((mid > 20 && s.isBusy()) || (mid < 500 && !s.isBusy())) {
             mid += s.getValue();
           }
           this.m = s;
           break;
         }
         case L: {
-          if(large > 20 || !s.isBusy()) {
+          if((large > 20 && s.isBusy()) || (large < 500 && !s.isBusy())) {
             large += s.getValue();
           }
           this.l = s;

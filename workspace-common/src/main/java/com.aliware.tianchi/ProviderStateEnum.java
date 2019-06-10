@@ -5,10 +5,10 @@ package com.aliware.tianchi;
  */
 public enum ProviderStateEnum {
 
-  $$$IDLE(1,7),
-  $$IDLE(2, 5),
-  $IDLE(3, 3),
-  IDLE(4, 1),
+  $$$IDLE(1,16),
+  $$IDLE(2, 8),
+  $IDLE(3, 4),
+  IDLE(4, 2),
   NORMAL(5, 0),
   BUSY(6, -1),
   $1BUSY(7, -2),

@@ -1,6 +1,5 @@
 package com.aliware.tianchi;
 
-import java.util.concurrent.ThreadLocalRandom;
 import org.apache.dubbo.remoting.exchange.Request;
 import org.apache.dubbo.remoting.transport.RequestLimiter;
 
@@ -24,13 +23,12 @@ public class TestRequestLimiter implements RequestLimiter {
   @Override
   public boolean tryAcquire(Request request, int activeTaskCount) {
 
-    ThreadLocalRandom random = ThreadLocalRandom.current();
     monitor.check();
 
     boolean tooHot = statistics.tooHot();
 
     if (tooHot) {
-      System.out.println("###### reject ##### " + " " + tooHot);
+//      System.out.println("###### reject ##### " + " " + tooHot);
       return false;
     }
 

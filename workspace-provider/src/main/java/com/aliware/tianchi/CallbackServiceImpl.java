@@ -42,7 +42,7 @@ public class CallbackServiceImpl implements CallbackService {
         }
         statistics.clear();
       }
-    }, 200, 200);
+    }, 250, 250);
   }
 
   //

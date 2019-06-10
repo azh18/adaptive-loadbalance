@@ -44,4 +44,9 @@ public class Strategy {
     return invokerList.get(2);
   }
 
+  public static <T> Invoker<T> simpleRandom(List<Invoker<T>> invokerList) {
+    return invokerList.get(ThreadLocalRandom.current().nextInt(invokerList.size()));
+  }
+
+
 }
