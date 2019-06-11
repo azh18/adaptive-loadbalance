@@ -1,8 +1,6 @@
 package com.aliware.tianchi;
 
 import com.aliware.tianchi.Context.Provider;
-import java.util.Timer;
-import java.util.TimerTask;
 import org.apache.dubbo.rpc.listener.CallbackListener;
 
 /**
@@ -14,33 +12,9 @@ public class CallbackListenerImpl implements CallbackListener {
 
   private static Context context = Context.getInstance();
 
-
-  private Timer timer = null;
-
-  private volatile int sec = 0;
-
-  private final Object lock = new Object();
-
-  private void init() {
-    timer = new Timer();
-    timer.schedule(
-        new TimerTask() {
-          @Override
-          public void run() {
-            synchronized (lock) {
-              sec++;
-            }
-          }
-        }
-        , 1000, 1000);
-  }
-
   @Override
   public void receiveServerMsg(String msg) {
     try {
-      if(timer == null) {
-        init();
-      }
 
       int s = context.small();
       int m = context.mid();
@@ -55,8 +29,7 @@ public class CallbackListenerImpl implements CallbackListener {
           + " " + stateEnum.toString()
           + " " + s
           + " " + m
-          + " " + l
-          + " " + sec);
+          + " " + l);
 
       String provider = strings[0];
 

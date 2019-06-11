@@ -2,14 +2,10 @@ package com.aliware.tianchi;
 
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.dubbo.common.Constants;
-import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.common.extension.ExtensionLoader;
-import org.apache.dubbo.common.status.Status;
-import org.apache.dubbo.common.status.StatusChecker;
 import org.apache.dubbo.common.store.DataStore;
 
 /**
@@ -29,14 +25,14 @@ public class ThreadPoolMonitor {
     check();
   }
 
-  public void check() {
+  private void check() {
 
     for (Map.Entry<String, Object> entry : executors.entrySet()) {
       ExecutorService executor = (ExecutorService) entry.getValue();
 
       if (executor instanceof ThreadPoolExecutor) {
         ThreadPoolExecutor tp = (ThreadPoolExecutor) executor;
-        statistics.setMax(tp.getMaximumPoolSize(), tp.getActiveCount());
+        statistics.setMax(tp.getMaximumPoolSize());
       }
     }
   }

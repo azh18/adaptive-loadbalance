@@ -5,7 +5,8 @@ package com.aliware.tianchi;
  */
 public enum ProviderStateEnum {
 
-  $$$IDLE(1,16),
+  $$$$IDLE(0, 32),
+  $$$IDLE(1, 16),
   $$IDLE(2, 8),
   $IDLE(3, 4),
   IDLE(4, 2),
@@ -17,7 +18,7 @@ public enum ProviderStateEnum {
   $4BUSY(10, -5),
   $5BUSY(11, -6),
   $6BUSY(12, -7),
-      ;
+  ;
 
   private int id;
 
@@ -41,8 +42,8 @@ public enum ProviderStateEnum {
   }
 
   public static ProviderStateEnum getFromValue(int i) {
-    for(ProviderStateEnum stateEnum : ProviderStateEnum.values()) {
-      if(stateEnum.getId() == i) {
+    for (ProviderStateEnum stateEnum : ProviderStateEnum.values()) {
+      if (stateEnum.getId() == i) {
         return stateEnum;
       }
     }
