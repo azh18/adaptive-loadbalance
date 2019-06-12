@@ -28,8 +28,8 @@ public class TestClientFilter implements Filter {
             Result result = invoker.invoke(invocation);
             long endTime = TimeUtil.currentTimeMillis();
             long rt = endTime - createTime;
-            if(result.getException() != null){
-                rt = 500;
+            if(result.hasException()){
+                rt = 2000;
             }
             Map<Invoker, Map<Long, Long>> invokerMapMap = threadLocal.get();
             if(invokerMapMap == null){
@@ -46,7 +46,7 @@ public class TestClientFilter implements Filter {
             if(Objects.isNull(aLong)){
                 longLongMap.put(key,rt);
             }else{
-                longLongMap.put(key,(aLong + rt) / 2);
+                longLongMap.put(key,aLong + rt);
             }
             return result;
         }catch (Exception e){
