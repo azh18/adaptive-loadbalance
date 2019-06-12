@@ -28,6 +28,9 @@ public class TestClientFilter implements Filter {
             Result result = invoker.invoke(invocation);
             long endTime = TimeUtil.currentTimeMillis();
             long rt = endTime - createTime;
+            if(result.getException() != null){
+                rt = 500;
+            }
             Map<Invoker, Map<Long, Long>> invokerMapMap = threadLocal.get();
             if(invokerMapMap == null){
                 invokerMapMap = new ConcurrentHashMap<>();
