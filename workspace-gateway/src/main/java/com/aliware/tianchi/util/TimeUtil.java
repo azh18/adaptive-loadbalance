@@ -1,5 +1,10 @@
 package com.aliware.tianchi.util;
 
+import com.aliware.tianchi.TestClientFilter;
+import org.apache.dubbo.rpc.Invoker;
+
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,6 +21,10 @@ public final class TimeUtil {
             public void run() {
                 while (true) {
                     currentTimeMillis = System.currentTimeMillis();
+                    Map<Invoker, Map<Long, Long>> invokerMapMap = TestClientFilter.threadLocal.get();
+                    if(Objects.nonNull(invokerMapMap)){
+                        invokerMapMap.values().forEach(longLongMap -> longLongMap.remove((currentTimeMillis   / 1000 - 2)));
+                    }
                     try {
                         TimeUnit.MILLISECONDS.sleep(1);
                     } catch (Throwable e) {
