@@ -1,12 +1,13 @@
 package com.aliware.tianchi;
 
+import com.aliware.tianchi.util.TimeUtil;
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.extension.Activate;
-import org.apache.dubbo.rpc.Filter;
-import org.apache.dubbo.rpc.Invocation;
-import org.apache.dubbo.rpc.Invoker;
-import org.apache.dubbo.rpc.Result;
-import org.apache.dubbo.rpc.RpcException;
+import org.apache.dubbo.rpc.*;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author daofeng.xjf
@@ -17,10 +18,33 @@ import org.apache.dubbo.rpc.RpcException;
  */
 @Activate(group = Constants.CONSUMER)
 public class TestClientFilter implements Filter {
+
+    public static ThreadLocal<Map<Invoker,Map<Long,Long>>> threadLocal = new ThreadLocal<>();
+
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
+            Long createTime = TimeUtil.currentTimeMillis();
             Result result = invoker.invoke(invocation);
+            long endTime = TimeUtil.currentTimeMillis();
+            long rt = endTime - createTime;
+            Map<Invoker, Map<Long, Long>> invokerMapMap = threadLocal.get();
+            if(invokerMapMap == null){
+                invokerMapMap = new ConcurrentHashMap<>();
+                threadLocal.set(invokerMapMap);
+            }
+            Map<Long, Long> longLongMap = invokerMapMap.get(invoker);
+            if(Objects.isNull(longLongMap)){
+                longLongMap = new ConcurrentHashMap<>();
+                invokerMapMap.put(invoker,longLongMap);
+            }
+            long key = endTime / 1000;
+            Long aLong = longLongMap.get(key);
+            if(Objects.isNull(aLong)){
+                longLongMap.put(key,rt);
+            }else{
+                longLongMap.put(key,(aLong + rt) / 2);
+            }
             return result;
         }catch (Exception e){
             throw e;
