@@ -29,7 +29,7 @@ public class TestClientFilter implements Filter {
             long endTime = TimeUtil.currentTimeMillis();
             long rt = endTime - createTime;
             if(result.hasException()){
-                rt = 1000;
+                rt = 100000;
             }
             Map<Invoker, Map<Long, Long>> invokerMapMap = threadLocal.get();
             if(invokerMapMap == null){
