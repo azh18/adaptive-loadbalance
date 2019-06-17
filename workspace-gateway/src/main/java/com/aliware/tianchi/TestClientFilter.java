@@ -24,11 +24,12 @@ public class TestClientFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
-            Long createTime = TimeUtil.currentTimeMillis();
+            long createTime = TimeUtil.currentTimeMillis();
             Result result = invoker.invoke(invocation);
             long endTime = TimeUtil.currentTimeMillis();
             long rt = endTime - createTime;
             if(result.hasException()){
+                System.out.println("出现异常！ invoker = " + invoker.getInterface().getName());
                 rt = 100000;
             }
             Map<Invoker, Map<Long, Long>> invokerMapMap = threadLocal.get();
@@ -38,6 +39,7 @@ public class TestClientFilter implements Filter {
             }
             Map<Long, Long> longLongMap = invokerMapMap.get(invoker);
             if(Objects.isNull(longLongMap)){
+                System.out.println("longLongMap是空的 invoker = " + invoker.getInterface().getName());
                 longLongMap = new ConcurrentHashMap<>();
                 invokerMapMap.put(invoker,longLongMap);
             }
@@ -47,9 +49,11 @@ public class TestClientFilter implements Filter {
                 aLong = longLongMap.get(key - 1);
             }
             if(Objects.isNull(aLong)){
+                System.out.println("aLong是空的 key = " + key + "; rt = " + rt + "; aLong = "+ aLong);
                 longLongMap.put(key,rt);
             }else{
-                longLongMap.put(key,aLong + rt);
+                System.out.println("key = " + key + "; rt = " + rt + "; aLong = "+ aLong);
+                longLongMap.put(key,(aLong + rt)/2);
             }
             return result;
         }catch (Exception e){

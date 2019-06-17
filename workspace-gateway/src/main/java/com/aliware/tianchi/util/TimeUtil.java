@@ -23,7 +23,7 @@ public final class TimeUtil {
                     currentTimeMillis = System.currentTimeMillis();
                     Map<Invoker, Map<Long, Long>> invokerMapMap = TestClientFilter.threadLocal.get();
                     if(Objects.nonNull(invokerMapMap)){
-                        invokerMapMap.values().forEach(longLongMap -> longLongMap.remove((currentTimeMillis   / 1000 - 2)));
+                        invokerMapMap.values().forEach(longLongMap -> longLongMap.remove((currentTimeMillis   / 1000 - 3)));
                     }
                     try {
                         TimeUnit.MILLISECONDS.sleep(1);
