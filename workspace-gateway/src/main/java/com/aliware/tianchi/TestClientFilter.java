@@ -44,6 +44,9 @@ public class TestClientFilter implements Filter {
             long key = endTime / 1000;
             Long aLong = longLongMap.get(key);
             if(Objects.isNull(aLong)){
+                aLong = longLongMap.get(key - 1);
+            }
+            if(Objects.isNull(aLong)){
                 longLongMap.put(key,rt);
             }else{
                 longLongMap.put(key,aLong + rt);
