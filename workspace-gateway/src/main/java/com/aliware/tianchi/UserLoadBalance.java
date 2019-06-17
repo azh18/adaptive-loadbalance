@@ -34,12 +34,12 @@ public class UserLoadBalance implements LoadBalance {
         for (Invoker invoker : invokers) {
             Map<Long, Long> longLongMap = invokerMapMap.get(invoker);
             if(Objects.isNull(longLongMap)){
-                System.out.println("随机1选择的 invoker = " + minInvoker.getInterface().getName());
+                System.out.println("随机1选择的 invoker");
                 return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
             }
             Long aLong = longLongMap.get(key);
             if(Objects.isNull(aLong)){
-                System.out.println("随机2选择的 invoker = " + minInvoker.getInterface().getName());
+                System.out.println("随机2选择的 invoker");
                 return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
             }
             if(aLong < minRT){
