@@ -41,11 +41,10 @@ public class UserLoadBalance implements LoadBalance {
                 return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
             }
             if(aLong < minRT){
-                minRT = aLong;
                 minInvoker = invoker;
+                minRT = aLong;
             }
-            return minInvoker;
         }
-        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
+        return minInvoker;
     }
 }
