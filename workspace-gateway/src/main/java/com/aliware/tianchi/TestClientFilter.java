@@ -7,6 +7,7 @@ import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 
+import java.sql.Time;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,27 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Activate(group = Constants.CONSUMER)
 public class TestClientFilter implements Filter {
 
-    public static ThreadLocal<Map<String, Map<Long, Long>>> threadLocal = new ThreadLocal<>();
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try {
-            long createTime = TimeUtil.currentTimeMillis();
-            Result result = invoker.invoke(invocation);
-            long endTime = TimeUtil.currentTimeMillis();
-            long rt = endTime - createTime;
-
-            if (result.hasException()) {
-                System.out.println("出现异常！ invoker = " + invoker.getInterface().getName());
-                rt = 1000;
-            }
-            SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
-            if (Objects.isNull(slidingWindowCounter)) {
-                slidingWindowCounter = new SlidingWindowCounter(3);
-                Loops.windowCounterMap.put(invoker.getUrl().getHost(), slidingWindowCounter);
-            }
-            slidingWindowCounter.increase(rt);
-            return result;
+            long start = TimeUtil.currentTimeMillis();
+            invocation.getAttachments().put("start", start + "");
+            return invoker.invoke(invocation);
         } catch (Exception e) {
             throw e;
         }
@@ -50,6 +37,20 @@ public class TestClientFilter implements Filter {
 
     @Override
     public Result onResponse(Result result, Invoker<?> invoker, Invocation invocation) {
+        long start = Long.valueOf(invocation.getAttachment("start"));
+        long endTime = TimeUtil.currentTimeMillis();
+        long rt = endTime - start;
+
+        if (result.hasException()) {
+            System.out.println("出现异常！ invoker = " + invoker.getInterface().getName());
+            rt = 1000;
+        }
+        SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
+        if (Objects.isNull(slidingWindowCounter)) {
+            slidingWindowCounter = new SlidingWindowCounter(3);
+            Loops.windowCounterMap.put(invoker.getUrl().getHost(), slidingWindowCounter);
+        }
+        slidingWindowCounter.increase(rt);
         return result;
     }
 }
