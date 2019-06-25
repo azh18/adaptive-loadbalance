@@ -42,7 +42,7 @@ public class TestClientFilter implements Filter {
         long rt = endTime - start;
 
         if (result.hasException()) {
-            System.out.println("出现异常！ invoker = " + invoker.getInterface().getName());
+            System.out.println("出现异常！ invoker = " + invoker.getUrl().getHost());
             rt = 1000;
         }
         SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
