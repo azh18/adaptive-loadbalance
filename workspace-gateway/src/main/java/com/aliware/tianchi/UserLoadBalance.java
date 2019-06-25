@@ -40,7 +40,7 @@ public class UserLoadBalance implements LoadBalance {
                 minInvoker = invoker;
             }
         }
-//        System.out.println("选择50ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min);
+//        System.out.println("选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min);
         return minInvoker;
 
     }
