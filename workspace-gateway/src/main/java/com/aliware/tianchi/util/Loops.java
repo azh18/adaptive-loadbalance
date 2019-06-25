@@ -25,20 +25,5 @@ public class Loops {
         daemon.start();
 
     }
-
-  
-    public static void fixLoop(Runnable runnable, int loop) {
-        for (int i = 0; i < loop; i++) {
-            run(runnable);  
-        }  
-    }  
-  
-    private static void run(Runnable runnable) {  
-        try {  
-            runnable.run();  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }  
-    }  
   
 }  

@@ -40,7 +40,7 @@ public class TestClientFilter implements Filter {
                 slidingWindowCounter = new SlidingWindowCounter(3);
                 Loops.windowCounterMap.put(invoker.getUrl().getHost(), slidingWindowCounter);
             }
-            Loops.fixLoop(slidingWindowCounter::increase, (int) rt);
+            slidingWindowCounter.increase(rt);
             return result;
         } catch (Exception e) {
             throw e;

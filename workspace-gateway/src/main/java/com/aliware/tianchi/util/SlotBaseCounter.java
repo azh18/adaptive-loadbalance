@@ -12,36 +12,36 @@ public class SlotBaseCounter {
     /**
      * 实际存储的数字
      */
-    private AtomicInteger[] slotCounter;
+    private volatile long[] slotCounter;
 
     /**
      * 生成一个有 slotSize 个槽的计数器
      *
      * @param slotSize
      */
-    public SlotBaseCounter(int slotSize) {  
-        slotSize = slotSize < 1 ? 1 : slotSize;  
-        this.slotSize = slotSize;  
-        this.slotCounter = new AtomicInteger[slotSize];  
-        for (int i = 0; i < this.slotSize; i++) {  
-            slotCounter[i] = new AtomicInteger(0);  
-        }  
-    }  
-  
-    public void increaseSlot(int slotSize) {  
-        slotCounter[slotSize].incrementAndGet();  
-    }  
-  
-    public void wipeSlot(int slotSize) {  
-        slotCounter[slotSize].set(0);  
-    }  
-  
-    public int totalCount() {  
-        return Arrays.stream(slotCounter).mapToInt(slotCounter -> slotCounter.get()).sum();
-    }  
-  
-    @Override  
-    public String toString() {  
-        return Arrays.toString(slotCounter);  
-    }  
+    public SlotBaseCounter(int slotSize) {
+        slotSize = slotSize < 1 ? 1 : slotSize;
+        this.slotSize = slotSize;
+        this.slotCounter = new long[slotSize];
+        for (int i = 0; i < this.slotSize; i++) {
+            slotCounter[i] = 0L;
+        }
+    }
+
+    public void increaseSlot(int slotSize, long count) {
+        slotCounter[slotSize] += count;
+    }
+
+    public void wipeSlot(int slotSize) {
+        slotCounter[slotSize] = 0;
+    }
+
+    public long getSlot(int slotSize) {
+        return slotCounter[slotSize];
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(slotCounter);
+    }
 }  

@@ -27,14 +27,14 @@ public class UserLoadBalance implements LoadBalance {
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
         Invoker minInvoker = invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
-        int min = Integer.MAX_VALUE;
+        long min = Long.MAX_VALUE;
         for (Invoker invoker : invokers) {
             SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
             if (Objects.isNull(slidingWindowCounter)) {
                 System.out.println("没有找到slidingWindowCounter，选择随机的：" + invoker.getUrl().getHost());
                 return minInvoker;
             }
-            int tmp = slidingWindowCounter.totalCount();
+            long tmp = slidingWindowCounter.get();
             if(tmp < min){
                 min = tmp;
                 minInvoker = invoker;
