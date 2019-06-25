@@ -1,5 +1,7 @@
 package com.aliware.tianchi;
 
+import com.aliware.tianchi.util.Loops;
+import com.aliware.tianchi.util.SlidingWindowCounter;
 import com.aliware.tianchi.util.TimeUtil;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
@@ -24,30 +26,22 @@ public class UserLoadBalance implements LoadBalance {
 
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
-        Map<Invoker, Map<Long, Long>> invokerMapMap = TestClientFilter.threadLocal.get();
-        if (Objects.isNull(invokerMapMap)) {
-            return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
-        }
-        long key = TimeUtil.currentTimeMillis() / 1000;
-        long minRT = Long.MAX_VALUE;
-        Invoker minInvoker = null;
+        Invoker minInvoker = invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
+        int min = Integer.MAX_VALUE;
         for (Invoker invoker : invokers) {
-            Map<Long, Long> longLongMap = invokerMapMap.get(invoker);
-            if(Objects.isNull(longLongMap)){
-                System.out.println("随机1选择的 invoker");
-                return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
+            SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
+            if (Objects.isNull(slidingWindowCounter)) {
+                System.out.println("没有找到slidingWindowCounter，选择随机的：" + invoker.getUrl().getHost());
+                return minInvoker;
             }
-            Long aLong = longLongMap.get(key);
-            if(Objects.isNull(aLong)){
-                System.out.println("随机2选择的 invoker");
-                return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
-            }
-            if(aLong < minRT){
+            int tmp = slidingWindowCounter.totalCount();
+            if(tmp < min){
+                min = tmp;
                 minInvoker = invoker;
-                minRT = aLong;
             }
         }
-        System.out.println("选择的 invoker = " + minInvoker.getInterface().getName());
+        System.out.println("选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min);
         return minInvoker;
+
     }
 }
