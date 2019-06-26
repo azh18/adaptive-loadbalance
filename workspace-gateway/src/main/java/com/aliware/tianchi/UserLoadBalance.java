@@ -43,7 +43,7 @@ public class UserLoadBalance implements LoadBalance {
         }
         StringBuilder stringBuilder = new StringBuilder();
         Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
-            stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ");
+            stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ").append(slidingWindowCounter.getExceptionCount()).append(" ");
         });
         System.out.println(TimeUtil.currentTimeMillis() + " 选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min + " info:"+stringBuilder.toString());
         return minInvoker;

@@ -40,21 +40,22 @@ public class TestClientFilter implements Filter {
         long start = Long.valueOf(invocation.getAttachment("start"));
         long endTime = TimeUtil.currentTimeMillis();
         long rt = endTime - start;
+        SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
 
         if (result.hasException()) {
             StringBuilder stringBuilder = new StringBuilder();
-            Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
-                stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ");
+            Loops.windowCounterMap.forEach((s, tmpSlidingWindowCounter) -> {
+                stringBuilder.append(s).append(":").append(tmpSlidingWindowCounter.get()).append(" ").append(tmpSlidingWindowCounter.getExceptionCount()).append(" ");
             });
             System.out.println(TimeUtil.currentTimeMillis() + " 出现异常！ invoker = " + invoker.getUrl().getHost() + " info:" + stringBuilder);
             rt = 1000;
+            slidingWindowCounter.addException();
         }
-        SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
         if (Objects.isNull(slidingWindowCounter)) {
             slidingWindowCounter = new SlidingWindowCounter(3);
             Loops.windowCounterMap.put(invoker.getUrl().getHost(), slidingWindowCounter);
         }
-        slidingWindowCounter.increase(rt);
+        slidingWindowCounter.increase(rt * slidingWindowCounter.getExceptionCount());
         return result;
     }
 }
