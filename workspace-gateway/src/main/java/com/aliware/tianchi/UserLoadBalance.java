@@ -28,7 +28,9 @@ public class UserLoadBalance implements LoadBalance {
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
         Invoker minInvoker = invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
+        Invoker minExceptionInvoker = minInvoker;
         long min = Long.MAX_VALUE;
+        long minException = Long.MAX_VALUE;
         for (Invoker invoker : invokers) {
             SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
             if (Objects.isNull(slidingWindowCounter)) {
@@ -40,12 +42,19 @@ public class UserLoadBalance implements LoadBalance {
                 min = tmp;
                 minInvoker = invoker;
             }
+            if(slidingWindowCounter.getExceptionCount() < minException){
+                minException = slidingWindowCounter.getExceptionCount();
+                minExceptionInvoker = invoker;
+            }
         }
-//        StringBuilder stringBuilder = new StringBuilder();
-//        Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
-//            stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ");
-//        });
-//        System.out.println(TimeUtil.currentTimeMillis() + " 选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min + " info:"+stringBuilder.toString());
+        if(min == 0){
+            minInvoker = minExceptionInvoker;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
+            stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ").append(slidingWindowCounter.getExceptionCount()).append(" ");
+        });
+        System.out.println(TimeUtil.currentTimeMillis() + " 选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min + " info:"+stringBuilder.toString());
         return minInvoker;
 
     }

@@ -8,6 +8,8 @@ public class SlidingWindowCounter {
      * 计数类
      */
     private volatile SlotBaseCounter slotBaseCounter;
+
+    private volatile long exceptionCount = 0;
     /**
      * 窗口大小
      */
@@ -41,6 +43,13 @@ public class SlidingWindowCounter {
         slotBaseCounter.increaseSlot(head, count);
     }
 
+    public void addException(){
+        this.exceptionCount++;
+    }
+
+    public long getExceptionCount(){
+        return exceptionCount;
+    }
 
     public void advance() {
         int tail = (head + 1) % windowSize;
