@@ -55,7 +55,7 @@ public class TestClientFilter implements Filter {
             slidingWindowCounter = new SlidingWindowCounter(3);
             Loops.windowCounterMap.put(invoker.getUrl().getHost(), slidingWindowCounter);
         }
-        slidingWindowCounter.increase(rt * slidingWindowCounter.getExceptionCount());
+        slidingWindowCounter.increase(rt * slidingWindowCounter.getExceptionCount() * 3);
         return result;
     }
 }
