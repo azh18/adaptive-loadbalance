@@ -48,12 +48,16 @@ public class SlidingWindowCounter {
         head = tail;
     }
 
-    public long get(){
+    public long get() {
+        long slot = slotBaseCounter.getSlot(head);
+        if (slot == 0) {
+            return slotBaseCounter.getSlot((head + windowSize - 1) % windowSize);
+        }
         return slotBaseCounter.getSlot(head);
     }
 
     @Override
     public String toString() {
-        return  " head = " + head + " >> " + slotBaseCounter;
+        return " head = " + head + " >> " + slotBaseCounter;
     }
 }  
