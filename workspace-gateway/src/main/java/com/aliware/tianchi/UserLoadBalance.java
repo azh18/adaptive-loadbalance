@@ -50,11 +50,11 @@ public class UserLoadBalance implements LoadBalance {
         if(min == 0){
             minInvoker = minExceptionInvoker;
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
-            stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ").append(slidingWindowCounter.getExceptionCount()).append(" ");
-        });
-        System.out.println(TimeUtil.currentTimeMillis() + " 选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min + " info:"+stringBuilder.toString());
+//        StringBuilder stringBuilder = new StringBuilder();
+//        Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
+//            stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ").append(slidingWindowCounter.getExceptionCount()).append(" ");
+//        });
+//        System.out.println(TimeUtil.currentTimeMillis() + " 选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min + " info:"+stringBuilder.toString());
         return minInvoker;
 
     }
