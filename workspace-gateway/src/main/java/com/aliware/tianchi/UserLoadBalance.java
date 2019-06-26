@@ -9,6 +9,7 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.cluster.LoadBalance;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,7 +32,7 @@ public class UserLoadBalance implements LoadBalance {
         for (Invoker invoker : invokers) {
             SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
             if (Objects.isNull(slidingWindowCounter)) {
-                System.out.println("没有找到slidingWindowCounter，选择随机的：" + invoker.getUrl().getHost());
+//                System.out.println("没有找到slidingWindowCounter，选择随机的：" + invoker.getUrl().getHost());
                 return minInvoker;
             }
             long tmp = slidingWindowCounter.get();
@@ -40,7 +41,7 @@ public class UserLoadBalance implements LoadBalance {
                 minInvoker = invoker;
             }
         }
-//        System.out.println("选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min);
+        System.out.println(TimeUtil.currentTimeMillis() + " 选择10ms内最小的：" + minInvoker.getUrl().getHost()  + " " + min);
         return minInvoker;
 
     }
