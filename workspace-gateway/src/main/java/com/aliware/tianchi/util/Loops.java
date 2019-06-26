@@ -16,7 +16,7 @@ public class Loops {
                     windowCounterMap.forEach((s, slidingWindowCounter) -> {
                         slidingWindowCounter.advance();
                     });
-                    TimeUnit.MILLISECONDS.sleep(5);
+                    TimeUnit.MILLISECONDS.sleep(10);
                 } catch (Throwable ignored) {
                 }
             }

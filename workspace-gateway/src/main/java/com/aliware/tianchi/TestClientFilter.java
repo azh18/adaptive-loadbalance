@@ -42,11 +42,11 @@ public class TestClientFilter implements Filter {
         long rt = endTime - start;
 
         if (result.hasException()) {
-            StringBuilder stringBuilder = new StringBuilder();
-            Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
-                stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ");
-            });
-            System.out.println(TimeUtil.currentTimeMillis() + " 出现异常！ invoker = " + invoker.getUrl().getHost() + " info:" + stringBuilder);
+//            StringBuilder stringBuilder = new StringBuilder();
+//            Loops.windowCounterMap.forEach((s, slidingWindowCounter) -> {
+//                stringBuilder.append(s).append(":").append(slidingWindowCounter.get()).append(" ");
+//            });
+//            System.out.println(TimeUtil.currentTimeMillis() + " 出现异常！ invoker = " + invoker.getUrl().getHost() + " info:" + stringBuilder);
             rt = 1000;
         }
         SlidingWindowCounter slidingWindowCounter = Loops.windowCounterMap.get(invoker.getUrl().getHost());
