@@ -20,12 +20,14 @@ public class TestClientFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
+            long start = System.currentTimeMillis();
             Result result = invoker.invoke(invocation);
+            long end = System.currentTimeMillis();
+            ProviderStatus.release(invoker.getUrl().getHost(), (int) (end - start));
             return result;
         }catch (Exception e){
             throw e;
         }
-
     }
 
     @Override

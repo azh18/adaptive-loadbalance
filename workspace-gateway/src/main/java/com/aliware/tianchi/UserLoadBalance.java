@@ -7,7 +7,6 @@ import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.cluster.LoadBalance;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author daofeng.xjf
@@ -21,6 +20,16 @@ public class UserLoadBalance implements LoadBalance {
 
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
-        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
+//        System.out.println(invokers.get(0).getInterface().getCanonicalName());
+        String host = ProviderStatus.next();
+        for (Invoker<T> invoker : invokers) {
+//            System.out.println(invoker.getUrl().getHost());
+            if (invoker.getUrl().getHost().equals(host)) {
+                ProviderStatus.request(invoker.getUrl().getHost());
+                return invoker;
+            }
+        }
+        return null;
+//        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
     }
 }
