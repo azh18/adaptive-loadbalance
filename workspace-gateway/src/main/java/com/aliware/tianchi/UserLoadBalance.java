@@ -7,6 +7,8 @@ import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.cluster.LoadBalance;
 
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -18,21 +20,32 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 选手需要基于此类实现自己的负载均衡算法
  */
 public class UserLoadBalance implements LoadBalance {
-    public static AtomicInteger requestCount = new AtomicInteger(0);
+    private static Random random = new Random(2019);
 
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
-//        requestCount.addAndGet(1);
-        String host = ProviderStatus.next();
+//        String host = ProviderStatus.next();
+//        for (Invoker<T> invoker : invokers) {
+//            if (invoker.getUrl().getHost().equals(host)) {
+//                return invoker;
+//            }
+//        }
+//        System.out.println("out of pool");
+//        return null;
+        int r = random.nextInt(9);
+        String host;
+        if (r < 1) {
+            host = "provider-small";
+        } else if (r < 4) {
+            host = "provider-medium";
+        } else {
+            host = "provider-large";
+        }
         for (Invoker<T> invoker : invokers) {
             if (invoker.getUrl().getHost().equals(host)) {
-//                if (requestCount.get() % 100 == 0) {
-//                    System.out.println(ProviderStatus.pastStat());
-//                }
                 return invoker;
             }
         }
-        System.out.println("out of pool");
         return null;
 //        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
     }
