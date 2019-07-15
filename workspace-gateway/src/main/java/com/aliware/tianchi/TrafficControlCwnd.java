@@ -1,6 +1,6 @@
 package com.aliware.tianchi;
 
-public class TrafficControlCwnd {
+public final class TrafficControlCwnd {
     private int cwnd;
     private int ssthresh;
     private int timeoutCnt;
