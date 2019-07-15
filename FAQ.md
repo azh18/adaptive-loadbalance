@@ -65,6 +65,7 @@
 
 原因： 使用了本地构建的 `internal-service` 导致 `service-provider.jar` 的 md5 与官方镜像中的不一致。
 
+<<<<<<< HEAD
 解决方案：注释掉`benchmarker/workflow/benchmark/workflow.py` 中的43行 `self.check_signatures()`
 
 ## 04.  我是 windows 系统，想按照 localtest 搭建本机测试环境，应该怎么安装 wrk?
@@ -78,3 +79,6 @@
 ## 06. 能否使用 provider 的最大线程数作为限流值
 
 允许。但不允许以 hardcode 的方式设定为固定值，如线程数为200/400/600的时候，固定将限流值设置为 200 。
+=======
+解决方案：注释掉`benchmarker/workflow/benchmark/workflow.py` 中的43行 `self.check_signatures()`
+>>>>>>> master
