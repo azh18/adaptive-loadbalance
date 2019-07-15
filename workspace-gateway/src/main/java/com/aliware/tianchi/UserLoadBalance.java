@@ -16,11 +16,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author daofeng.xjf
- *
- * 负载均衡扩展接口
- * 必选接口，核心接口
- * 此类可以修改实现，不可以移动类或者修改包名
- * 选手需要基于此类实现自己的负载均衡算法
+ *         <p>
+ *         负载均衡扩展接口
+ *         必选接口，核心接口
+ *         此类可以修改实现，不可以移动类或者修改包名
+ *         选手需要基于此类实现自己的负载均衡算法
  */
 public class UserLoadBalance implements LoadBalance {
     public static ConcurrentHashMap<String, Double> providerToRTT = new ConcurrentHashMap<>();
@@ -28,16 +28,16 @@ public class UserLoadBalance implements LoadBalance {
 
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
-        if (providerToRTT.size() == 0)
+        if (providerToRTT.size() < 3)
             return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
-//
+
         double reciprocalSum = 0;
-        for (Double d : providerToRTT.values()){
+        for (Double d : providerToRTT.values()) {
             reciprocalSum += 1000.0 / d;
         }
-//
+
         double nextD = new Random().nextDouble() * reciprocalSum;
-        for (int i = 0; i < invokers.size(); i++){
+        for (int i = 0; i < invokers.size(); i++) {
             System.out.println(invokers.get(i).getUrl().getHost());
             nextD -= 1.0 / providerToRTT.get(invokers.get(i).getUrl().getHost());
             if (nextD < 0)
