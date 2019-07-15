@@ -8,10 +8,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
-<<<<<<< HEAD
-=======
 import java.util.concurrent.ConcurrentLinkedQueue;
->>>>>>> master
 
 /**
  * @author daofeng.xjf
@@ -21,10 +18,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * 用户可以基于此服务，实现服务端向客户端动态推送的功能
  */
 public class CallbackServiceImpl implements CallbackService {
-<<<<<<< HEAD
-
-    public CallbackServiceImpl() {
-=======
     private final int period = 5; // 定期推送的周期
     private final int calculatedNum = 5; // 窗口大小
     public static ConcurrentLinkedQueue<Long> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
@@ -47,16 +40,12 @@ public class CallbackServiceImpl implements CallbackService {
 //    }
 
         public CallbackServiceImpl() {
->>>>>>> master
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!listeners.isEmpty()) {
                     for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
                         try {
-<<<<<<< HEAD
-                            entry.getValue().receiveServerMsg(System.getProperty("quota") + " " + new Date().toString());
-=======
                             // 先删去多余的rtt信息
                             for (int i = 0; i < concurrentLinkedQueue.size() - calculatedNum; i++)
                                 concurrentLinkedQueue.poll();
@@ -72,18 +61,13 @@ public class CallbackServiceImpl implements CallbackService {
                             // 传递quota, CallbackListenerImpl中可通过该值判断是哪个provider
                             System.out.println(System.getProperty("quota") + " " + averageRTT);
                             entry.getValue().receiveServerMsg(System.getProperty("quota") + " " + averageRTT);
->>>>>>> master
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
                         }
                     }
                 }
             }
-<<<<<<< HEAD
-        }, 0, 5000);
-=======
         }, 0, period);
->>>>>>> master
     }
 
     private Timer timer = new Timer();

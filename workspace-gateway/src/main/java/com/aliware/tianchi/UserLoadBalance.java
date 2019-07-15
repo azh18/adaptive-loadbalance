@@ -1,18 +1,10 @@
 package com.aliware.tianchi;
 
-<<<<<<< HEAD
-=======
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
->>>>>>> master
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.rpc.Invocation;
 import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.RpcException;
-<<<<<<< HEAD
-import org.apache.dubbo.rpc.cluster.LoadBalance;
-
-import java.util.List;
-=======
 import org.apache.dubbo.rpc.RpcStatus;
 import org.apache.dubbo.rpc.cluster.LoadBalance;
 
@@ -20,7 +12,6 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
->>>>>>> master
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -32,12 +23,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * 选手需要基于此类实现自己的负载均衡算法
  */
 public class UserLoadBalance implements LoadBalance {
-<<<<<<< HEAD
-
-    @Override
-    public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
-        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
-=======
     public static ConcurrentHashMap<String, Double> providerToRTT = new ConcurrentHashMap<>();
 
 
@@ -65,6 +50,5 @@ public class UserLoadBalance implements LoadBalance {
 //        System.out.println("LoadBalance executed, first url: " + invoker.getUrl());
 //        int active = RpcStatus.getStatus(invoker.getUrl(), invocation.getMethodName()).getActive();
 //        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
->>>>>>> master
     }
 }

@@ -20,9 +20,6 @@ public class TestServerFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
-<<<<<<< HEAD
-            Result result = invoker.invoke(invocation);
-=======
             long startTime = System.currentTimeMillis();
             Result result = invoker.invoke(invocation);
             long endTime = System.currentTimeMillis();
@@ -31,7 +28,6 @@ public class TestServerFilter implements Filter {
             CallbackServiceImpl.concurrentLinkedQueue.add(costTime);
 //            if (CallbackServiceImpl.concurrentLinkedQueue.size() > 5)
 //                CallbackServiceImpl.concurrentLinkedQueue.poll();
->>>>>>> master
             return result;
         }catch (Exception e){
             throw e;
