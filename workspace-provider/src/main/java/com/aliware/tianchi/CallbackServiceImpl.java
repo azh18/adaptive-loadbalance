@@ -18,8 +18,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *         用户可以基于此服务，实现服务端向客户端动态推送的功能
  */
 public class CallbackServiceImpl implements CallbackService {
-    private final int period = 5; // 定期推送的周期
-    private final int calculatedNum = 5; // 窗口大小
+    private final int period = 50; // 定期推送的周期
+    private final int calculatedNum = 3; // 窗口大小
     public static ConcurrentLinkedQueue<Long> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
 
 //    public CallbackServiceImpl() {
@@ -59,7 +59,7 @@ public class CallbackServiceImpl implements CallbackService {
                             averageRTT = averageRTT / (1.0 * count);
 
                             // 传递quota, CallbackListenerImpl中可通过该值判断是哪个provider
-                            System.out.println(System.getProperty("quota") + " " + averageRTT);
+//                            System.out.println(System.getProperty("quota") + " " + averageRTT);
                             entry.getValue().receiveServerMsg(System.getProperty("quota") + " " + averageRTT);
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
