@@ -61,7 +61,7 @@ public class CallbackServiceImpl implements CallbackService {
                             long used_mem = readFileInt("/sys/fs/cgroup/memory/memory.usage_in_bytes");
                             long limit_mem = readFileInt("/sys/fs/cgroup/memory/memory.limit_in_bytes");
                             long free_mem = limit_mem - used_mem;
-                            entry.getValue().receiveServerMsg(System.getProperty("quota") + ":" + Long.toString(free_mem) + ":" + Long.toString(limit_mem));
+                            entry.getValue().receiveServerMsg(System.getProperty("quota") + ":" + Runtime.getRuntime().availableProcessors() + ":" + Long.toString(limit_mem) + ":" + Long.toString(free_mem));
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
                         }
