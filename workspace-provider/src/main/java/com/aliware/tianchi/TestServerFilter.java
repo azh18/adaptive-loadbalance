@@ -20,7 +20,11 @@ public class TestServerFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         try{
+            long start = System.currentTimeMillis();
             Result result = invoker.invoke(invocation);
+            long end = System.currentTimeMillis();
+            long cost = end - start;
+            CallbackServiceImpl.pushCost(cost);
             return result;
         }catch (Exception e){
             throw e;

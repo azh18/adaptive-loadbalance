@@ -20,6 +20,7 @@ public class TestRequestLimiter implements RequestLimiter {
      */
     @Override
     public boolean tryAcquire(Request request, int activeTaskCount) {
+        CallbackServiceImpl.activeTaskCount.set(activeTaskCount);
         return true;
     }
 

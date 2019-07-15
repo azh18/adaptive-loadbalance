@@ -14,18 +14,22 @@ public class ProviderStatus {
     public static Map<String, Integer> TASK_LIMIT = new HashMap<>();
     public static Map<String, AtomicInteger> currentTask = new ConcurrentHashMap<>();
     public static Map<String, AtomicInteger> lastRTT = new ConcurrentHashMap<>();
+    public static Map<String, AtomicInteger> totalTask = new ConcurrentHashMap<>();
 
     static {
-        TASK_LIMIT.put("provider-small", 108);
-        TASK_LIMIT.put("provider-medium", 331);
-        TASK_LIMIT.put("provider-large", 480);
+//        ProviderConf.init();
+        TASK_LIMIT.put("provider-small", 130);
+        TASK_LIMIT.put("provider-medium", 361);
+        TASK_LIMIT.put("provider-large", 500);
         currentTask.put("provider-small", new AtomicInteger(0));
         currentTask.put("provider-medium", new AtomicInteger(0));
         currentTask.put("provider-large", new AtomicInteger(0));
         lastRTT.put("provider-small", new AtomicInteger(0));
         lastRTT.put("provider-medium", new AtomicInteger(0));
         lastRTT.put("provider-large", new AtomicInteger(0));
-
+        totalTask.put("provider-small", new AtomicInteger(0));
+        totalTask.put("provider-medium", new AtomicInteger(0));
+        totalTask.put("provider-large", new AtomicInteger(0));
     }
 
     public static String next() {
@@ -43,19 +47,36 @@ public class ProviderStatus {
                 minHost.set(host);
             }
         });
-        return minHost.get();
+        String host = minHost.get();
+        totalTask.get(host).addAndGet(1);
+        return host;
     }
 
-    public static void request(String host) {
-        currentTask.get(host).addAndGet(1);
+//    public static void request(String host) {
+//        currentTask.get(host).addAndGet(1);
+//    }
+//
+//    public static void release(String host) {
+//        currentTask.get(host).addAndGet(-1);
+//    }
+
+    public static void active(String host, int activeTask) {
+        currentTask.get(host).set(activeTask);
     }
 
-    public static void release(String host, int rtt) {
-        currentTask.get(host).addAndGet(-1);
-        lastRTT.get(host).set(rtt);
+    public static void refresh(String host, long rtt) {
+        lastRTT.get(host).set((int) rtt);
     }
 
-    private static int host2number(String host) {
+    public static String pastStat() {
+        return String.format("small: [%d/%d, %d ms], medium: [%d/%d, %d ms], large: [%d/%d, %d ms]",
+                currentTask.get("provider-small").get(), totalTask.get("provider-small").get(), lastRTT.get("provider-small").get(),
+                currentTask.get("provider-medium").get(), totalTask.get("provider-medium").get(), lastRTT.get("provider-medium").get(),
+                currentTask.get("provider-large").get(), totalTask.get("provider-large").get(), lastRTT.get("provider-large").get()
+        );
+    }
+
+    public static int host2number(String host) {
         switch (host) {
             case "provider-small": return 0;
             case "provider-medium": return 1;
@@ -63,4 +84,5 @@ public class ProviderStatus {
         }
         return -1;
     }
+
 }

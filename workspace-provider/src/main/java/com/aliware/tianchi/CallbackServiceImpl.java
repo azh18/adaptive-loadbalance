@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author daofeng.xjf
@@ -17,22 +19,40 @@ import java.util.concurrent.ConcurrentHashMap;
  * 用户可以基于此服务，实现服务端向客户端动态推送的功能
  */
 public class CallbackServiceImpl implements CallbackService {
+    public static ConcurrentLinkedQueue<Long> costs = new ConcurrentLinkedQueue<>();
+    public static AtomicInteger activeTaskCount = new AtomicInteger(0);
+//    public static ConcurrentHashMap<String, Integer> activeTasks = new ConcurrentHashMap<>();
+//
+//    static {
+//        activeTasks.put("provider-small", 0);
+//        activeTasks.put("provider-medium", 0);
+//        activeTasks.put("provider-large", 0);
+//    }
 
     public CallbackServiceImpl() {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (!listeners.isEmpty()) {
+                    double avg = costs.stream().mapToLong(c -> c).average().orElse(0);
                     for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
                         try {
-                            entry.getValue().receiveServerMsg(System.getProperty("quota") + " " + new Date().toString());
+//                            String _activeTasks = activeTasks.get("provider-small") + "," + activeTasks.get("provider-medium") + "," + activeTasks.get("provider-large");
+                            entry.getValue().receiveServerMsg("provider-" + System.getProperty("quota") + " " + String.format("%.4f", avg) + " " + activeTaskCount);
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
                         }
                     }
                 }
             }
-        }, 0, 5000);
+        }, 0, 100);
+    }
+
+    public static void pushCost(long cost) {
+        while (costs.size() > 4) {
+            costs.remove();
+        }
+        costs.add(cost);
     }
 
     private Timer timer = new Timer();

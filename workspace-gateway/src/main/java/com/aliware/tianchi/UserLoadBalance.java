@@ -7,6 +7,7 @@ import org.apache.dubbo.rpc.RpcException;
 import org.apache.dubbo.rpc.cluster.LoadBalance;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author daofeng.xjf
@@ -17,18 +18,21 @@ import java.util.List;
  * 选手需要基于此类实现自己的负载均衡算法
  */
 public class UserLoadBalance implements LoadBalance {
+    public static AtomicInteger requestCount = new AtomicInteger(0);
 
     @Override
     public <T> Invoker<T> select(List<Invoker<T>> invokers, URL url, Invocation invocation) throws RpcException {
-//        System.out.println(invokers.get(0).getInterface().getCanonicalName());
+//        requestCount.addAndGet(1);
         String host = ProviderStatus.next();
         for (Invoker<T> invoker : invokers) {
-//            System.out.println(invoker.getUrl().getHost());
             if (invoker.getUrl().getHost().equals(host)) {
-                ProviderStatus.request(invoker.getUrl().getHost());
+//                if (requestCount.get() % 100 == 0) {
+//                    System.out.println(ProviderStatus.pastStat());
+//                }
                 return invoker;
             }
         }
+        System.out.println("out of pool");
         return null;
 //        return invokers.get(ThreadLocalRandom.current().nextInt(invokers.size()));
     }
