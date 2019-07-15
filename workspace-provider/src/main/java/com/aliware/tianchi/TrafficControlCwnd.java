@@ -6,7 +6,7 @@ public final class TrafficControlCwnd {
     private int timeoutCnt;
     private int timeoutThreshold;
 
-    TrafficControlCwnd(int initCwnd, int timeoutThreshold, int ssthresh){
+    public TrafficControlCwnd(int initCwnd, int timeoutThreshold, int ssthresh){
         this.cwnd = initCwnd;
         this.ssthresh = ssthresh;
         this.timeoutThreshold = timeoutThreshold;
