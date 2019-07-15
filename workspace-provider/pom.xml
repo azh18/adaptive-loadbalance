@@ -16,6 +16,14 @@
             <groupId>com.aliware.tianchi</groupId>
             <artifactId>workspace-common</artifactId>
         </dependency>
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.google.guava/guava &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>com.google.guava</groupId>-->
+        <!--<artifactId>guava</artifactId>-->
+        <!--<version>27.1-jre</version>-->
+        <!--</dependency>-->
+
     </dependencies>
 
 </project>
