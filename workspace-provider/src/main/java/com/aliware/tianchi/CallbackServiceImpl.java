@@ -12,10 +12,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author daofeng.xjf
- * <p>
- * 服务端回调服务
- * 可选接口
- * 用户可以基于此服务，实现服务端向客户端动态推送的功能
+ *         <p>
+ *         服务端回调服务
+ *         可选接口
+ *         用户可以基于此服务，实现服务端向客户端动态推送的功能
  */
 public class CallbackServiceImpl implements CallbackService {
     private final int period = 5; // 定期推送的周期
@@ -39,7 +39,7 @@ public class CallbackServiceImpl implements CallbackService {
 //        }, 0, 5000);
 //    }
 
-        public CallbackServiceImpl() {
+    public CallbackServiceImpl() {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -52,7 +52,7 @@ public class CallbackServiceImpl implements CallbackService {
 
                             double averageRTT = 0;
                             int count = 0;
-                            for (Long l : concurrentLinkedQueue){
+                            for (Long l : concurrentLinkedQueue) {
                                 averageRTT += l;
                                 count++;
                             }
