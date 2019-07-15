@@ -39,7 +39,7 @@ public class UserLoadBalance implements LoadBalance {
         double nextD = new Random().nextDouble() * reciprocalSum;
         for (int i = 0; i < invokers.size(); i++) {
             System.out.println(invokers.get(i).getUrl().getHost());
-            nextD -= 1.0 / providerToRTT.get(invokers.get(i).getUrl().getHost());
+            nextD -= 1000.0 / providerToRTT.get(invokers.get(i).getUrl().getHost());
             if (nextD < 0)
                 return invokers.get(i);
         }
