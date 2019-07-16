@@ -17,20 +17,20 @@ public class CallbackListenerImpl implements CallbackListener {
     @Override
     public void receiveServerMsg(String msg) {
         //System.out.println("receive msg from server :" + msg);
-//        String[] parameters = msg.split("\\:");
-//        String providerName = parameters[0];
-//        int availableCores = Integer.parseInt(parameters[1]);
-//        long maximumMemory = Long.parseLong(parameters[2]);
-//        long freeMemory = Long.parseLong(parameters[3]);
-//        if(!status.containsKey(providerName)) {
-//            status.put(providerName, new ProviderStatus(providerName));
-//        }
-//        ProviderStatus providerStatus = status.get(providerName);
-//        if(availableCores != providerStatus.getAvailableCores()) {
-//            providerStatus.setAvailableCores(availableCores);
-//        }
-//        providerStatus.setFreeMemory(freeMemory);
-//        providerStatus.setMaxMemory(maximumMemory);
+        String[] parameters = msg.split("\\:");
+        String providerName = parameters[0];
+        int availableCores = Integer.parseInt(parameters[1]);
+        long maximumMemory = Long.parseLong(parameters[2]);
+        long freeMemory = Long.parseLong(parameters[3]);
+        if(!status.containsKey(providerName)) {
+            status.put(providerName, new ProviderStatus(providerName));
+        }
+        ProviderStatus providerStatus = status.get(providerName);
+        if(availableCores != providerStatus.getAvailableCores()) {
+            providerStatus.setAvailableCores(availableCores);
+        }
+        providerStatus.setFreeMemory(freeMemory);
+        providerStatus.setMaxMemory(maximumMemory);
         //System.out.println(status);
     }
 }
