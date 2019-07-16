@@ -1,5 +1,5 @@
 package com.aliware.tianchi;
-
+import static com.aliware.tianchi.GlobalParameters.status;
 import org.apache.dubbo.common.Constants;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.Filter;
@@ -19,10 +19,18 @@ import org.apache.dubbo.rpc.RpcException;
 public class TestClientFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        String host = invoker.getUrl().getHost();
+
+        String quota = host.split("-")[1];
+        //System.out.println(quota);
         try{
             Result result = invoker.invoke(invocation);
+//            if(status.containsKey(quota))
+//                status.get(quota).increaseEffectiveWeight();
             return result;
         }catch (Exception e){
+//            if(status.containsKey(quota))
+//                status.get(quota).decreaseEffectiveWeight();
             throw e;
         }
 

@@ -3,6 +3,9 @@ package com.aliware.tianchi;
 import org.apache.dubbo.rpc.listener.CallbackListener;
 import org.apache.dubbo.rpc.service.CallbackService;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Date;
 import java.util.Map;
 import java.util.Timer;
@@ -38,15 +41,10 @@ public class CallbackServiceImpl implements CallbackService {
             reader.close();
             // System.out.println(tempString.length());
             return Long.parseLong(tempString);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e1) {
-                }
-            }
+
         }
         return 0;
     }
@@ -58,10 +56,10 @@ public class CallbackServiceImpl implements CallbackService {
                 if (!listeners.isEmpty()) {
                     for (Map.Entry<String, CallbackListener> entry : listeners.entrySet()) {
                         try {
-                            long used_mem = readFileInt("/sys/fs/cgroup/memory/memory.usage_in_bytes");
-                            long limit_mem = readFileInt("/sys/fs/cgroup/memory/memory.limit_in_bytes");
-                            long free_mem = limit_mem - used_mem;
-                            entry.getValue().receiveServerMsg(System.getProperty("quota") + ":" + Runtime.getRuntime().availableProcessors() + ":" + Long.toString(limit_mem) + ":" + Long.toString(free_mem));
+//                            long used_mem = readFileInt("/sys/fs/cgroup/memory/memory.usage_in_bytes");
+//                            long limit_mem = readFileInt("/sys/fs/cgroup/memory/memory.limit_in_bytes");
+//                            long free_mem = limit_mem - used_mem;
+                            entry.getValue().receiveServerMsg(System.getProperty("quota") + ":" + Runtime.getRuntime().availableProcessors() + ":" + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory());
                         } catch (Throwable t1) {
                             listeners.remove(entry.getKey());
                         }
@@ -82,6 +80,6 @@ public class CallbackServiceImpl implements CallbackService {
     @Override
     public void addListener(String key, CallbackListener listener) {
         listeners.put(key, listener);
-        listener.receiveServerMsg(new Date().toString()); // send notification for change
+        listener.receiveServerMsg(System.getProperty("quota") + ":" + Runtime.getRuntime().availableProcessors() + ":" + Runtime.getRuntime().totalMemory() + ":" + Runtime.getRuntime().freeMemory()); // send notification for change
     }
 }
